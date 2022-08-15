@@ -10,9 +10,9 @@ const User = mongoose.model("User", {
       required: true,
       type: String,
     },
-    phone: String,
     avatar: Object, // nous verrons plus tard comment uploader une image
   },
+  newsletter: Boolean,
   token: String,
   hash: String,
   salt: String,

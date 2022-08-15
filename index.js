@@ -10,6 +10,9 @@ mongoose.connect("mongodb://localhost/vinted");
 const usersRoutes = require("./routes/user");
 app.use(usersRoutes);
 
+const offersRoutes = require("./routes/offer");
+app.use(offersRoutes);
+
 app.all("*", (req, res) => {
   res.status(404).json({ message: "cette route n'existe pas" });
 });
