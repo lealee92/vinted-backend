@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router(); // pour séparer le code source en plusieurs fichiers
 
 const uid2 = require("uid2");
 const SHA256 = require("crypto-js/sha256");
@@ -58,7 +58,7 @@ router.post("/user/signup", async (req, res) => {
 });
 
 router.post("/user/login", async (req, res) => {
-  const { email, password } = req.fields;
+  const { email, password } = req.body;
   const isUser = await User.findOne({ email: email });
 
   try {

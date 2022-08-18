@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Offer = mongoose.connect("Offer", {
+const Offer = mongoose.model("Offer", {
   product_name: String,
   product_description: String,
   product_price: Number,

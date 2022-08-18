@@ -13,10 +13,13 @@ app.use(usersRoutes);
 const offersRoutes = require("./routes/offer");
 app.use(offersRoutes);
 
+// pour gérer les pages introuvables,
+
 app.all("*", (req, res) => {
   res.status(404).json({ message: "cette route n'existe pas" });
 });
 
+// pour écouter les requêtes du port 3000
 app.listen(3000, () => {
   console.log("Server has started !!");
 });
