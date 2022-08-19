@@ -1,11 +1,12 @@
 const express = require("express");
 const formidable = require("express-formidable");
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 const app = express();
 app.use(formidable());
 
-mongoose.connect("mongodb://localhost/vinted");
+mongoose.connect(process.env.MONGODB_URI);
 
 const usersRoutes = require("./routes/user");
 app.use(usersRoutes);
@@ -20,6 +21,6 @@ app.all("*", (req, res) => {
 });
 
 // pour écouter les requêtes du port 3000
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server has started !!");
 });

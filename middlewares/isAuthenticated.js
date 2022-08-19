@@ -2,7 +2,7 @@ const User = require("../models/User");
 
 const isAuthenticated = async (req, res, next) => {
   // req.headers.authorization;
-  // console.log(req.headers);
+  console.log(req.headers);
   if (req.headers.authorization) {
     // faire la suite
     const token = req.headers.authorization.replace("Bearer ", ""); // aussi pr la requête axios
