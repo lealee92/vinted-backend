@@ -4,9 +4,16 @@ const router = express.Router(); // pour séparer le code source en plusieurs fi
 const uid2 = require("uid2");
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
+const cloudinary = require("cloudinary").v2;
 
 // import des models (ex: faire des recherches dans les collections si besoin)
 const User = require("../models/User");
+
+cloudinary.config({
+  cloud_name: "dzo87dcws",
+  api_key: "574745914227143",
+  api_secret: "Lt0hqS8fGRlMuLLa5UDZq1hq5vI",
+});
 
 router.post("/user/signup", async (req, res) => {
   const { email, password, username, newsletter } = req.fields;
@@ -40,6 +47,14 @@ router.post("/user/signup", async (req, res) => {
         });
 
         await newUser.save();
+        console.log(req.files.picture.path);
+        const picture = await cloudinary.uploader.upload(
+          req.files.picture.path,
+          { folder: `vinted/profiles/${newUser._id}` }
+        );
+        newUser.account.avatar = picture;
+        await newUser.save();
+
         res.status(200).json({
           _id: newUser._id,
           email: newUser.email,
