@@ -13,66 +13,73 @@ cloudinary.config({
   api_secret: "Lt0hqS8fGRlMuLLa5UDZq1hq5vI",
 });
 
-// router.get("/offers", isAuthenticated, async (req, res) => {
-//   // console.log(req.query);
-//   try {
-//     let filters = {};
-//     if (req.query.title) {
-//       filters.product_name = new RegExp(req.query.title, "i");
-//     }
+// Route qui nous permet de récupérer une liste d'annonces, en fonction de filtres
+// Si aucun filtre n'est envoyé, cette route renverra l'ensemble des annonces
+router.get("/offers", async (req, res) => {
+  try {
+    // création d'un objet dans lequel on va sotcker nos différents filtres
+    let filters = {};
 
-//     if (req.query.priceMin) {
-//       filters.product_price = {
-//         $gte: req.query.priceMin,
-//       };
-//     }
+    if (req.query.title) {
+      filters.product_name = new RegExp(req.query.title, "i");
+    }
 
-//     if (req.query.priceMax) {
-//       if (filters.product_price) {
-//         filters.product_price.$lte = req.query.priceMax;
-//       } else {
-//         filters.product_price = {
-//           $lte: req.query.priceMax,
-//         };
-//       }
-//     }
+    if (req.query.priceMin) {
+      filters.product_price = {
+        $gte: req.query.priceMin,
+      };
+    }
 
-//     let sort = {};
+    if (req.query.priceMax) {
+      if (filters.product_price) {
+        filters.product_price.$lte = req.query.priceMax;
+      } else {
+        filters.product_price = {
+          $lte: req.query.priceMax,
+        };
+      }
+    }
 
-//     if (req.query.sort === "price-desc") {
-//       sort = { product_price: -1 };
-//     } else if (req.query.sort === "price-asc") {
-//       sort = { product_price: 1 };
-//     }
+    let sort = {};
 
-//     let page;
-//     if (Number(req.query.page) < 1) {
-//       page = 1;
-//     } else {
-//       page = Number(req.query.page);
-//     }
+    if (req.query.sort === "price-desc") {
+      sort = { product_price: -1 };
+    } else if (req.query.sort === "price-asc") {
+      sort = { product_price: 1 };
+    }
 
-//     let limit = Number(req.query.limit);
+    let { page, size } = req.query;
+    if (!page) {
+      page = 1;
+    }
+    if (!size) {
+      size = 10;
+    }
 
-//     const offers = await Offer.find(filters)
-//       .populate({
-//         path: "owner",
-//         select: "account",
-//       })
-//       .sort(sort)
-//       .skip((page - 1) * limit) // ignorer les x résultats
-//       .limit(limit); // renvoyer y résultats
+    const limit = parseInt(size);
+    const skip = (page - 1) * size;
 
-//     res.json({
-//       count: count,
-//       offers: offers,
-//     });
+    const offers = await Offer.find(filters)
+      .populate({
+        path: "owner",
+        select: "account",
+      })
+      .sort(sort)
+      .skip(skip) // ignorer les x résultats
+      .limit(limit) // renvoyer y résultats
+      .select("product_name product_price");
 
-//     res.status(200).json(offers);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
+    const count = await Offer.countDocuments(filters);
+
+    res.json({
+      count: count,
+      offers: offers,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ message: error.message });
+  }
+});
 
 router.post("/offer/publish", isAuthenticated, async (req, res) => {
   // console.log(req.user); //une clé req = pour lier chaque offre à l'user qui la poste
