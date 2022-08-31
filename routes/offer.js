@@ -1,17 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const cloudinary = require("cloudinary").v2;
 
 const User = require("../models/User");
 const Offer = require("../models/Offer");
 const isAuthenticated = require("../middlewares/isAuthenticated");
-const { json } = require("express");
-const cloudinary = require("cloudinary").v2;
-
-cloudinary.config({
-  cloud_name: "dzo87dcws",
-  api_key: "574745914227143",
-  api_secret: "Lt0hqS8fGRlMuLLa5UDZq1hq5vI",
-});
 
 // Route qui nous permet de récupérer une liste d'annonces, en fonction de filtres
 // Si aucun filtre n'est envoyé, cette route renverra l'ensemble des annonces
