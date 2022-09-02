@@ -32,6 +32,6 @@ app.all("*", (req, res) => {
 });
 
 // pour écouter les requêtes du port 3000
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("Server has started !!");
 });
