@@ -17,7 +17,6 @@ cloudinary.config({
 });
 
 mongoose.connect(process.env.MONGODB_URI);
-console.log(process.env.MONGODB_URI);
 
 const usersRoutes = require("./routes/user");
 app.use(usersRoutes);
@@ -32,6 +31,6 @@ app.all("*", (req, res) => {
 });
 
 // pour écouter les requêtes du port 3000
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server has started !!");
 });

@@ -61,6 +61,7 @@ router.get("/offers", async (req, res) => {
       .skip(skip) // ignorer les x résultats
       .limit(limit) // renvoyer y résultats
       .select("product_name product_price");
+    console.log(offers);
 
     const count = await Offer.countDocuments(filters);
 

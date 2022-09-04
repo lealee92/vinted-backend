@@ -10,9 +10,9 @@ const cloudinary = require("cloudinary").v2;
 const User = require("../models/User");
 
 cloudinary.config({
-  cloud_name: "dzo87dcws",
-  api_key: "574745914227143",
-  api_secret: "Lt0hqS8fGRlMuLLa5UDZq1hq5vI",
+  cloud_name: "process.env.CLOUDINARY_CLOUD_NAME",
+  api_key: "process.env.CLOUDINARY_API_KEY",
+  api_secret: "process.env.CLOUDINARY_API_SECRET",
 });
 
 router.post("/user/signup", async (req, res) => {
@@ -20,6 +20,7 @@ router.post("/user/signup", async (req, res) => {
   try {
     // Recherche dans la BDD. Est-ce qu'un utilisateur possède cet email ?
     const user = await User.findOne({ email: email });
+    console.log(user);
 
     // Si oui, on renvoie un message et on ne procède pas à l'inscription
     if (user) {
@@ -47,7 +48,6 @@ router.post("/user/signup", async (req, res) => {
         });
 
         await newUser.save();
-        console.log(req.files.picture.path);
         const picture = await cloudinary.uploader.upload(
           req.files.picture.path,
           { folder: `vinted/profiles/${newUser._id}` }
